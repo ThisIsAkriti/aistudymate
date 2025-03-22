@@ -1,10 +1,22 @@
-import { Button } from "../components/ui/button"
-
+import BgGradient from "@/components/common/bg-gradient";
+import DemoSection from "@/components/Home/demo-section";
+import HeroSection from "@/components/Home/hero-section";
+import HowItWorks from "@/components/Home/how-it-works";
+import Pricing from "@/components/Home/pricing-section";
+import CTASection from "@/components/Home/cta-section"
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)] text-3xl">
-      <h1>Your Ai Studymate</h1>
-      <Button className="cursor-pointer" variant="outline" size={"lg"}>Hello</Button>
+    <div className="relative w-full">
+      <BgGradient/>
+      <div className="flex flex-col">
+        <HeroSection />
+        <DemoSection />
+        <HowItWorks />
+        <Pricing />
+        <CTASection/>
+      </div>
+     
     </div>
+    
   );
 }
