@@ -43,3 +43,11 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
     > use /#sectionName to scroll to a section.
 - When you need to go to a new page, 
     > use "/pageName".
+
+## Uploading Process:
+- user uploads the pdf(Upload thing website for this)
+- pdf url (will be provided by uploadThing website)
+- Extract and load PDF uploaded(using langchain)
+- Generate summary using gemini ai or open ai
+- summary
+- save pdf in pdf_summary inside our database(neonDB);
