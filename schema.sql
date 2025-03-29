@@ -7,7 +7,8 @@ CREATE TABLE users(
   email VARCHAR(255) UNIQUE NOT NULL,
   full_name VARCHAR(255),
   customer_id VARCHAR(255) UNIQUE,
-  price_id VARCHAR(50) DEFAULT 'inactive',
+  price_id VARCHAR(255),
+  status VARCHAR(50) DEFAULT 'inactive',
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
@@ -15,7 +16,7 @@ CREATE TABLE users(
 -- PDF Summaries Table (for storing PDF processing results)
 CREATE TABLE pdf_summaries(
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  user_id VARCHAR(255) NOT NULL,
   original_file_url TEXT NOT NULL,
   summary_text TEXT NOT NULL,
   status VARCHAR(50) DEFAULT 'completed',

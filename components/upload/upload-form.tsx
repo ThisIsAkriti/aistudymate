@@ -3,8 +3,9 @@ import { useUploadThing } from "@/utils/uploadthing";
 import UploadFormInput from "./upload-form-input";
 import { z } from "zod";
 import { toast } from "sonner";
-import { generatePdfSummary } from "@/action/upload-actions";
-import { useState } from "react";
+import { generatePdfSummary, storePdfSummaryAction } from "@/action/upload-actions";
+import { useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 
 const schema = z.object({
     file: z
@@ -17,7 +18,8 @@ const schema = z.object({
 })
 export default function UploadForm() {
     const [isLoading, setIsLoading] = useState(false);
-
+    const formRef = useRef<HTMLFormElement>(null);
+    const router = useRouter();
     const { startUpload, routeConfig } = useUploadThing("pdfUploader", {
             onClientUploadComplete: () => {
                 console.log("uploaded successfully!");
@@ -28,7 +30,7 @@ export default function UploadForm() {
                     description: err.message
                 });
             },
-            onUploadBegin: ({ file }) => {
+            onUploadBegin:(file:string) => {
                 console.log("upload has begun for", file);
             },
     })
@@ -75,11 +77,36 @@ export default function UploadForm() {
             
             // parse the pdf using langchain
                 
-            const summary = await generatePdfSummary(resp);
-            console.log(summary);
+            const result = await generatePdfSummary(resp);
+
+            const { data = null, message = null } = result || {};
+            if (data) {
+                let storeResult: any;
+                toast('📄Saving PDF...', {
+                    description: 'Hang tight! We are saving your summary!✨'
+                });
+                formRef.current?.reset();
+                if (data.summary) {
+                    storeResult = await storePdfSummaryAction({
+                        summary: data.summary,
+                        fileUrl: resp[0].serverData.file.url,
+                        title: data.title,
+                        fileName: file.name
+                    });
+                    toast('Summary Generated!', {
+                        description: 'Your PDF has been successfully summarized and save!✨'
+                    });
+                    formRef.current?.reset();
+                    router.push(`/summaries/${storeResult.data.id}`)
+                    
+                }
+            }
         } catch (err) {
             setIsLoading(false);
             console.error('Error occurred', err);
+            formRef.current?.reset();
+        } finally {
+            setIsLoading(false);
         }
         // summarise the pdf using ai
         // save summary to database 
@@ -88,7 +115,7 @@ export default function UploadForm() {
     }
     return (
         <div className="flex flex-col w-full gap-8 max-w-2xl mx-auto">
-            <UploadFormInput isLoading={isLoading} onSubmit={handleSubmit} />
+            <UploadFormInput ref={formRef} isLoading={isLoading} onSubmit={handleSubmit} />
         </div>
     )
 }
