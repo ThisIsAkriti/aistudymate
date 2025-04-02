@@ -7,6 +7,15 @@ import { ArrowRight, Plus } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
+interface SummaryType {
+    id: string;
+    title: string;
+    original_file_url: string;
+    created_at: string;
+    summary_text: string;
+    status: string;
+}
+  
 export default async function DashboardPage() {
     const user = await currentUser(); // from clerk
     const userId = user?.id;
@@ -46,7 +55,7 @@ export default async function DashboardPage() {
                 </div>
 
                 <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3 sm:px-0">
-                    {summaries.map((summary, index) => (
+                    {summaries.map((summary:SummaryType, index:number) => (
                         <SummaryCard key={index} summary = {summary} />
                    ))}
                 </div>

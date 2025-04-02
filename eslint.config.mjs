@@ -17,7 +17,7 @@ const eslintConfig = {
       'prettier',
       'plugin:tailwindcss/recommended',
     ],
-    plugins: ['prettier'],
+    plugins: ['tailwindcss'],
     rules: {
       'prettier/prettier': 'error',
       'react/no-escape-entities': 'off',

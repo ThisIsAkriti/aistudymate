@@ -1,5 +1,4 @@
 import User from "@/models/User";
-import { clerkClient } from "@clerk/clerk-sdk-node";
 import { getDbConnection } from "./db";
 
 export async function storeUserIfNotExists(userData: { _id: string; email: string; full_name: string }) {
