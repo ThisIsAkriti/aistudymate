@@ -3,10 +3,11 @@
 import { getDbConnection } from "@/lib/db";
 import { fetchAndExtractPdfText } from "@/lib/fetchAndExtractPdfText";
 import { generateSummaryFromGemini } from "@/lib/geminiai";
+import PdfSummary from "@/models/PdfSummary";
+import User from "@/models/User";
 import { formatFileNameAsTitle } from "@/utils/format-utils";
 import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
-import { v4 as uuidv4, validate as validateUUID } from 'uuid';
 
 interface PdfSummaryType{
     userId?: string,
@@ -101,36 +102,30 @@ async function savePdfSummary(
         summary,
         title,
         fileName
-    }:PdfSummaryType  & { userEmail?: string }) {
+    }:PdfSummaryType) {
     try {
-        console.log("Debugging userId:", userId);
-        const sql = await getDbConnection();
+        
+        await getDbConnection();
+        console.log(`Searching for user with ID: ${userId}`);
 
-        if (!validateUUID(userId)) {
-            userId = uuidv4();
-            console.log(userId)
+        const user = await User.findOne({ _id: userId }).lean(); 
+        console.log(user + ' user')
+        if (!user) {
+        console.error("❌ Error: User not found in the database.");
+        return null; // Exit without creating a summary
+            }
+        
+        const newSummary = new PdfSummary({
+            user_id: userId, // Store user reference
+            original_file_url: fileUrl,
+            summary_text: summary,
+            title,
+            file_name: fileName,
+        });
+        
+        await newSummary.save();
+        console.log("✅ PDF summary saved successfully!");
 
-            await sql`INSERT INTO users (id, email) VALUES (
-                ${userId},
-                'default@example.com' 
-            )`;
-
-        }
-        await sql `INSERT INTO pdf_summaries(
-            user_id, 
-            original_file_url, 
-            summary_text, 
-            title, 
-            file_name
-        ) 
-        VALUES (
-            ${userId},
-            ${fileUrl},
-            ${summary},
-            ${title},
-            ${fileName}
-        ) 
-        `;
     } catch (err) {
         console.error('Error saving PDF summary!', err)
     }
