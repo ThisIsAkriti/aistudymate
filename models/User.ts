@@ -1,8 +1,9 @@
 import mongoose from "mongoose";
+import { unique } from "next/dist/build/utils";
 
 const UserSchema = new mongoose.Schema(
   {
-    _id: { type: String, required: true }, // Store Clerk's userId as a string
+    clerkId: { type: String, required: true , unique:true}, // Store Clerk's userId as a string
     email: { type: String, required: true, unique: true },
     full_name: { type: String },
     customer_id: { type: String, unique: true, sparse: true },
