@@ -9,9 +9,13 @@ export async function getCurrentUser() {
         console.error("❌ No user found in Clerk!");
         return null;
     }
-
+    const user = await clerkClient.users.getUser(userId);
     console.log(`✅ Clerk UserID Retrieved: ${userId}`);
     
-    await storeUserIfNotExists(userId); // Save user in MongoDB
+    await storeUserIfNotExists({
+        _id: userId,
+        email: user?.emailAddresses[0]?.emailAddress || "",
+        full_name: `${user?.firstName || ""} ${user?.lastName || ""}`.trim()
+      });
     return userId;
 }

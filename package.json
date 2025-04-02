@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@clerk/clerk-sdk-node": "^4.13.23",
-    "@clerk/nextjs": "^6.12.8",
+    "@clerk/nextjs": "^6.12.12",
     "@google/generative-ai": "^0.24.0",
     "@langchain/community": "^0.3.36",
     "@langchain/core": "^0.3.42",
@@ -41,6 +41,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/tailwindcss": "^3.0.11",
     "eslint": "^9",
     "eslint-config-next": "15.2.3",
     "eslint-config-prettier": "^10.1.1",
