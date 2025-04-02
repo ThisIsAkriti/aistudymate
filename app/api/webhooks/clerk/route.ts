@@ -99,8 +99,22 @@ export async function POST(req: Request) {
     
     // create user in MongoDB
     if (eventType === 'user.created') {
-        const { id, email_addresses, image_url, first_name, last_name, username } = evt.data;
+        const {
+            id,
+            email_addresses,
+            image_url,
+            first_name,
+            last_name,
+            username
+        } = evt.data;
 
+        if (!email_addresses || email_addresses.length === 0) {
+            return NextResponse.json(
+              { error: 'User email is missing' },
+              { status: 400 }
+            );
+        }
+        
         const user = {
             clerkId: id,
             email: email_addresses[0].email_address,
