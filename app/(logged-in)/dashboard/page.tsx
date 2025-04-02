@@ -1,7 +1,7 @@
 import BgGradient from "@/components/common/bg-gradient";
 import SummaryCard from "@/components/summaries/summary-card";
 import { Button } from "@/components/ui/button";
-import getSummaries from "@/lib/summaries";
+//import getSummaries from "@/lib/summaries";
 import { currentUser } from "@clerk/nextjs/server";
 import { ArrowRight, Plus } from "lucide-react";
 import Link from "next/link";
@@ -15,6 +15,32 @@ interface SummaryType {
     summary_text: string;
     status: string;
 }
+const summaries: SummaryType[] = [
+    {
+      id: "1",
+      title: "AI and the Future",
+      created_at: "2024-04-01T10:00:00Z",
+      original_file_url: "https://example.com/ai.pdf",
+      summary_text: "This document explores how AI will impact various industries in the next decade.",
+      status: "completed",
+    },
+    {
+      id: "2",
+      title: "Quantum Computing Explained",
+      created_at: "2024-03-29T14:30:00Z",
+      original_file_url: "https://example.com/quantum.pdf",
+      summary_text: "A deep dive into quantum mechanics and its role in computational advancements.",
+      status: "pending",
+    },
+    {
+      id: "3",
+      title: "The Psychology of Learning",
+      created_at: "2024-03-25T09:15:00Z",
+      original_file_url: "https://example.com/learning.pdf",
+      summary_text: "An analysis of cognitive processes that help improve learning efficiency.",
+      status: "completed",
+    },
+  ];
   
 export default async function DashboardPage() {
     const user = await currentUser(); // from clerk
@@ -23,7 +49,7 @@ export default async function DashboardPage() {
     if (!userId) return redirect('/sign-in');
 
     const uploadLimit = 5;
-    const summaries = await getSummaries(userId);
+    //const summaries = await getSummaries(userId);
     return (
         <main className="min-h-screen">
             <BgGradient />
